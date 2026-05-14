@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Método Socrático</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gold-dark: #8a6d1e;
+    --stone: #2a2318;
+    --stone-mid: #3d3325;
+    --parchment: #f5edd8;
+    --parchment-dark: #e8d9b8;
+    --ink: #1a1208;
+    --olive: #6b7c3a;
+  }
+ 
+  body {
+    background-color: var(--stone);
+    background-image:
+      radial-gradient(ellipse at 20% 10%, #3d3325 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 90%, #1a1208 0%, transparent 60%);
+    font-family: 'EB Garamond', Georgia, serif;
+    color: var(--parchment);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+ 
+  .header {
+    text-align: center;
+    padding: 3rem 2rem 2rem;
+    position: relative;
+  }
+ 
+  .header::before {
+    content: '⚬ ⚬ ⚬';
+    display: block;
+    color: var(--gold);
+    font-size: 1.2rem;
+    letter-spacing: 1rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+  }
+ 
+  .header h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.6rem, 5vw, 3rem);
+    color: var(--gold-light);
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    text-shadow: 0 2px 20px rgba(201,168,76,0.3);
+  }
+ 
+  .header .subtitle {
+    font-style: italic;
+    color: var(--parchment-dark);
+    font-size: 1.1rem;
+    margin-top: 0.8rem;
+    opacity: 0.8;
+  }
+ 
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 2rem;
+    margin: 1rem 0;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  .divider span {
+    color: var(--gold);
+    font-size: 1.2rem;
+  }
+ 
+  .quote-banner {
+    text-align: center;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--parchment-dark);
+    padding: 1rem 3rem 2rem;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+ 
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 1rem 2rem 2rem;
+  }
+ 
+  .nav-btn {
+    background: transparent;
+    border: 1px solid var(--gold-dark);
+    color: var(--parchment-dark);
+    font-family: 'EB Garamond', serif;
+    font-size: 0.95rem;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 0.03em;
+  }
+  .nav-btn:hover, .nav-btn.active {
+    background: var(--gold-dark);
+    color: var(--parchment);
+    border-color: var(--gold);
+  }
+ 
+  .sections-container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+ 
+  .section {
+    display: none;
+    animation: fadeIn 0.5s ease;
+  }
+  .section.active { display: block; }
+ 
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+ 
+  .section-header {
+    text-align: center;
+    padding: 2rem 0 1.5rem;
+  }
+ 
+  .person-tag {
+    display: inline-block;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold-dark);
+    padding: 0.25rem 1rem;
+    margin-bottom: 1rem;
+  }
+ 
+  .section-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.1rem, 3vw, 1.7rem);
+    color: var(--gold-light);
+    line-height: 1.3;
+  }
+ 
+  .content-block {
+    background: rgba(245,237,216,0.05);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-left: 3px solid var(--gold-dark);
+    padding: 1.5rem 1.8rem;
+    margin-bottom: 1.4rem;
+    line-height: 1.85;
+    font-size: 1.05rem;
+    color: var(--parchment-dark);
+  }
+ 
+  .content-block h3 {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--gold-light);
+    margin-bottom: 0.7rem;
+    font-style: italic;
+  }
+ 
+  .highlight-box {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid var(--gold-dark);
+    padding: 1.2rem 1.6rem;
+    margin: 1.4rem 0;
+    text-align: center;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--parchment);
+    line-height: 1.7;
+  }
+ 
+  .dialogue-box {
+    background: rgba(26,18,8,0.5);
+    border: 1px solid rgba(201,168,76,0.25);
+    padding: 1.4rem 1.8rem;
+    margin: 1.4rem 0;
+    font-size: 1rem;
+    line-height: 2;
+  }
+ 
+  .dialogue-box .speaker {
+    color: var(--gold);
+    font-weight: 500;
+    font-style: normal;
+  }
+ 
+  .dialogue-box p { margin-bottom: 0.3rem; }
+ 
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.2rem;
+    margin: 1.4rem 0;
+  }
+ 
+  .card-item {
+    background: rgba(245,237,216,0.04);
+    border: 1px solid rgba(201,168,76,0.18);
+    padding: 1.2rem 1.3rem;
+    line-height: 1.75;
+  }
+ 
+  .card-item .card-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+ 
+  .card-item h4 {
+    color: var(--gold-light);
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+    font-style: italic;
+  }
+ 
+  .card-item p {
+    font-size: 0.95rem;
+    color: var(--parchment-dark);
+    opacity: 0.9;
+  }
+ 
+  .nav-section {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(201,168,76,0.15);
+  }
+ 
+  .nav-section button {
+    background: transparent;
+    border: 1px solid var(--gold-dark);
+    color: var(--parchment-dark);
+    font-family: 'EB Garamond', serif;
+    font-size: 1rem;
+    padding: 0.6rem 1.6rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .nav-section button:hover {
+    background: var(--gold-dark);
+    color: var(--parchment);
+  }
+ 
+  .ornament {
+    text-align: center;
+    color: var(--gold-dark);
+    font-size: 1.3rem;
+    letter-spacing: 0.5rem;
+    margin: 1.2rem 0;
+    opacity: 0.5;
+  }
+ 
+  .conclusion-card {
+    text-align: center;
+    background: rgba(201,168,76,0.07);
+    border: 1px solid var(--gold-dark);
+    padding: 2rem;
+    margin-top: 1.5rem;
+  }
+ 
+  .conclusion-card p {
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: var(--parchment-dark);
+  }
+ 
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    color: rgba(245,237,216,0.35);
+    font-size: 0.9rem;
+    font-style: italic;
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+ 
+<div class="header">
+  <h1>O Método Socrático</h1>
+  <p class="subtitle">"Só sei que nada sei." — Sócrates</p>
+</div>
+ 
+<div class="divider"><span>✦</span></div>
+ 
+<p class="quote-banner">
+  No século V a.C., nas ruas de Atenas, um filósofo revolucionou o modo como os seres humanos buscam a verdade — não por respostas, mas por perguntas.
+</p>
+ 
+<nav class="nav">
+  <button class="nav-btn active" onclick="showSection(0)">I — O Método</button>
+  <button class="nav-btn" onclick="showSection(1)">II — Ironia Socrática</button>
+  <button class="nav-btn" onclick="showSection(2)">III — Maiêutica</button>
+  <button class="nav-btn" onclick="showSection(3)">IV — O Diálogo</button>
+  <button class="nav-btn" onclick="showSection(4)">V — Relevância</button>
+</nav>
+ 
+<div class="sections-container">
+ 
+  <!-- SEÇÃO 1 -->
+  <div class="section active" id="sec-0">
+    <div class="section-header">
+      <div class="person-tag">Pessoa 1</div>
+      <h2 class="section-title">O que é o Método Socrático?</h2>
+    </div>
+ 
+    <div class="content-block">
+      <h3>Definição geral</h3>
+      O Método Socrático é uma forma de filosofar baseada no diálogo e nas perguntas. Em vez de ensinar com respostas prontas, Sócrates fazia o interlocutor pensar por si mesmo, até que a verdade emergisse naturalmente da própria reflexão. É um método de investigação filosófica por meio da conversa.
+    </div>
+ 
+    <div class="highlight-box">
+      "O método não transmite conhecimento — ele desperta o conhecimento que já existe dentro de cada pessoa."
+    </div>
+ 
+    <div class="content-block">
+      <h3>Por que Sócrates criou esse método?</h3>
+      Sócrates acreditava que os homens de Atenas afirmavam saber coisas que, na verdade, não sabiam. Ele se via como um "moscardo" enviado pelos deuses para incomodar as pessoas e fazê-las questionar suas próprias certezas. Seu objetivo era combater a arrogância do falso saber.
+    </div>
+ 
+    <div class="content-block">
+      <h3>O conhecimento está dentro de cada um</h3>
+      Para Sócrates, o verdadeiro conhecimento não vem de fora — ele já habita a alma de cada pessoa. O papel do filósofo é ajudar o outro a "lembrar" o que já sabe, por meio de perguntas bem colocadas. Essa ideia se conecta ao conceito platônico da reminiscência.
+    </div>
+ 
+    <div class="ornament">✦ ✦ ✦</div>
+ 
+    <div class="nav-section">
+      <button onclick="showSection(1)">Próximo: A Ironia Socrática →</button>
+    </div>
+  </div>
+ 
+  <!-- SEÇÃO 2 -->
+  <div class="section" id="sec-1">
+    <div class="section-header">
+      <div class="person-tag">Pessoa 2</div>
+      <h2 class="section-title">A Ironia Socrática — 1ª etapa do método</h2>
+    </div>
+ 
+    <div class="content-block">
+      <h3>O que é a ironia socrática?</h3>
+      A ironia socrática é a primeira etapa do método. Sócrates fingia ser ignorante sobre o assunto em questão, pedindo ao outro que o ensinasse. Com isso, ele levava o interlocutor a desenvolver seus argumentos — e, ao expô-los, o outro acabava revelando as próprias contradições.
+    </div>
+ 
+    <div class="content-block">
+      <h3>Como Sócrates fingia não saber nada</h3>
+      Ele se aproximava de políticos, poetas e artesãos — pessoas que acreditavam ser sábias — e dizia: "dizem que você é muito sábio, poderia me explicar o que é a coragem?" ou "o que é a justiça?". O outro respondia com confiança, mas as perguntas de Sócrates iam desmontando cada argumento.
+    </div>
+ 
+    <div class="content-block">
+      <h3>Objetivo: fazer o outro perceber que também não sabe</h3>
+      O objetivo não era humilhar, mas libertar. Ao perceber que não sabia o que pensava que sabia, a pessoa ficava aberta a buscar o verdadeiro conhecimento. Sócrates dizia que essa descoberta era mais valiosa do que qualquer resposta pronta.
+    </div>
+ 
+    <div class="dialogue-box">
+      <p style="color: var(--gold-light); font-style:italic; margin-bottom: 0.8rem;">Exemplo de diálogo — Sócrates e um político:</p>
+      <p><span class="speaker">Político:</span> Claro que sei o que é justiça! É dar a cada um o que lhe é devido.</p>
+      <p><span class="speaker">Sócrates:</span> Então, se meu amigo está com raiva e me pede a espada que lhe emprestei, devo devolvê-la?</p>
+      <p><span class="speaker">Político:</span> Ora... não, pois ele poderia se machucar.</p>
+      <p><span class="speaker">Sócrates:</span> Mas você disse que justiça é dar a cada um o que lhe é devido. Parece que sua definição tem um problema, não?</p>
+      <p style="font-style: italic; color: var(--parchment-dark); margin-top: 0.6rem;">O político percebe que não sabe tanto quanto pensava.</p>
+    </div>
+ 
+    <div class="nav-section">
+      <button onclick="showSection(0)">← Anterior</button>
+      <button onclick="showSection(2)">Próximo: A Maiêutica →</button>
+    </div>
+  </div>
+ 
+  <!-- SEÇÃO 3 -->
+  <div class="section" id="sec-2">
+    <div class="section-header">
+      <div class="person-tag">Pessoa 3</div>
+      <h2 class="section-title">A Maiêutica — 2ª etapa do método</h2>
+    </div>
+ 
+    <div class="content-block">
+      <h3>O que é a maiêutica?</h3>
+      Maiêutica vem do grego "maieutiké", que significa a arte de partejar. Após a ironia desestabilizar as falsas certezas, a maiêutica é a etapa construtiva: Sócrates ajudava o interlocutor a "dar à luz" novas ideias — a encontrar, por meio de perguntas, respostas mais verdadeiras e consistentes.
+    </div>
+ 
+    <div class="highlight-box">
+      "Minha mãe era parteira de corpos. Eu sou parteiro de almas — ajudo as pessoas a trazerem ao mundo as ideias que carregam dentro de si."<br>
+      <span style="font-size: 0.9rem; opacity: 0.7; display:block; margin-top:0.5rem;">— Sócrates (segundo Platão, no Teeteto)</span>
+    </div>
+ 
+    <div class="content-block">
+      <h3>A metáfora da parteira</h3>
+      A mãe de Sócrates, Fenarete, era parteira — ajudava mulheres a dar à luz. Sócrates dizia que fazia o mesmo com as ideias: não colocava nada de fora, apenas ajudava o outro a extrair o conhecimento que já estava dentro de si. A comparação é poderosa: a parteira não gera o bebê — ela só facilita o parto.
+    </div>
+ 
+    <div class="content-block">
+      <h3>Como ele "paria" ideias através de perguntas</h3>
+      Após desestabilizar o interlocutor com a ironia, Sócrates começava a fazer perguntas mais profundas e direcionadas. O outro ia respondendo, pensando, corrigindo — até chegar, por conta própria, a uma compreensão mais verdadeira do tema. A conclusão pertencia ao interlocutor, não a Sócrates.
+    </div>
+ 
+    <div class="columns">
+      <div class="card-item">
+        <span class="card-icon">⚡</span>
+        <h4>1ª etapa — Ironia</h4>
+        <p>Desconstruir o falso conhecimento. O interlocutor percebe que não sabe.</p>
+      </div>
+      <div class="card-item">
+        <span class="card-icon">🌱</span>
+        <h4>2ª etapa — Maiêutica</h4>
+        <p>Construir o verdadeiro conhecimento. O interlocutor descobre o que realmente sabe.</p>
+      </div>
+    </div>
+ 
+    <div class="nav-section">
+      <button onclick="showSection(1)">← Anterior</button>
+      <button onclick="showSection(3)">Próximo: O Diálogo →</button>
+    </div>
+  </div>
+ 
+  <!-- SEÇÃO 4 -->
+  <div class="section" id="sec-3">
+    <div class="section-header">
+      <div class="person-tag">Pessoa 4</div>
+      <h2 class="section-title">O Diálogo como Ferramenta</h2>
+    </div>
+ 
+    <div class="content-block">
+      <h3>Por que Sócrates nunca escrevia, só conversava?</h3>
+      Sócrates não deixou nenhum texto escrito — tudo o que sabemos sobre ele veio de seus discípulos, principalmente Platão. Ele acreditava que a escrita era inferior ao diálogo vivo, pois um texto não pode responder perguntas, se defender ou se adaptar. A verdade, para ele, nasce na troca entre pessoas.
+    </div>
+ 
+    <div class="highlight-box">
+      "Um livro fala sempre a mesma coisa para quem quer que o leia. O diálogo responde ao que o outro realmente precisa ouvir."
+    </div>
+ 
+    <div class="content-block">
+      <h3>Como as perguntas e respostas levavam à verdade</h3>
+      No diálogo socrático, cada resposta gera uma nova pergunta. O raciocínio vai se refinando, contradições são identificadas e superadas, e aos poucos se constrói um entendimento mais sólido. Não é uma competição — é uma busca colaborativa pela verdade.
+    </div>
+ 
+    <div class="content-block">
+      <h3>A importância do debate para chegar ao conhecimento</h3>
+      Para Sócrates, ninguém chega à sabedoria sozinho. O confronto respeitoso de ideias é o caminho. Quando duas pessoas debatem honestamente, ambas saem com uma compreensão mais profunda do que entraram. O diálogo é, em si, um ato filosófico.
+    </div>
+ 
+    <div class="dialogue-box">
+      <p style="color: var(--gold-light); font-style:italic; margin-bottom: 0.8rem;">A lógica do diálogo socrático:</p>
+      <p>➊ Sócrates faz uma pergunta simples sobre um conceito</p>
+      <p>➋ O interlocutor dá uma resposta aparentemente óbvia</p>
+      <p>➌ Sócrates questiona essa resposta com casos específicos</p>
+      <p>➍ O interlocutor percebe a limitação da própria resposta</p>
+      <p>➎ Juntos, constroem uma definição mais verdadeira</p>
+    </div>
+ 
+    <div class="nav-section">
+      <button onclick="showSection(2)">← Anterior</button>
+      <button onclick="showSection(4)">Próximo: Relevância →</button>
+    </div>
+  </div>
+ 
+  <!-- SEÇÃO 5 -->
+  <div class="section" id="sec-4">
+    <div class="section-header">
+      <div class="person-tag">Pessoa 5</div>
+      <h2 class="section-title">Importância e Aplicação do Método</h2>
+    </div>
+ 
+    <div class="content-block">
+      <h3>Por que o método é relevante até hoje?</h3>
+      Vivemos em uma era de informações rápidas e respostas prontas. O método socrático nos lembra que pensar criticamente é mais valioso do que memorizar conteúdo. Em vez de aceitar o que nos é dito, ele nos ensina a questionar, analisar e construir o próprio entendimento.
+    </div>
+ 
+    <div class="columns">
+      <div class="card-item">
+        <span class="card-icon">🏛️</span>
+        <h4>Na sala de aula</h4>
+        <p>Professores que fazem perguntas ao invés de dar respostas prontas usam o método socrático para estimular o pensamento crítico dos alunos.</p>
+      </div>
+      <div class="card-item">
+        <span class="card-icon">⚖️</span>
+        <h4>No direito</h4>
+        <p>Advogados e juízes utilizam o interrogatório e o contra-interrogatório para revelar inconsistências e buscar a verdade nos tribunais.</p>
+      </div>
+      <div class="card-item">
+        <span class="card-icon">💬</span>
+        <h4>Em debates</h4>
+        <p>Qualquer debate bem conduzido segue a lógica socrática: apresentar teses, questionar argumentos e refinar posições coletivamente.</p>
+      </div>
+    </div>
+ 
+    <div class="content-block">
+      <h3>O legado de Sócrates</h3>
+      Sócrates foi condenado à morte em 399 a.C., acusado de corromper a juventude e não honrar os deuses de Atenas. Mas seu método sobreviveu. Ele influenciou Platão, que influenciou Aristóteles, que por sua vez moldou toda a filosofia ocidental. Sua forma de pensar vive em cada vez que alguém faz uma boa pergunta.
+    </div>
+ 
+    <div class="conclusion-card">
+      <p>
+        O Método Socrático não é apenas uma técnica filosófica antiga — é um convite eterno para que cada ser humano questione suas certezas, busque o autoconhecimento e participe ativamente da construção da verdade. Como dizia Sócrates:<br><br>
+        <em style="color: var(--gold-light); font-size: 1.15rem;">"Uma vida sem reflexão não vale a pena ser vivida."</em>
+      </p>
+    </div>
+ 
+    <div class="nav-section">
+      <button onclick="showSection(3)">← Anterior</button>
+      <button onclick="showSection(0)">↺ Recomeçar</button>
+    </div>
+  </div>
+ 
+</div>
+ 
+<div class="footer">
+  Filosofia — Método Socrático &nbsp;·&nbsp; Trabalho em grupo &nbsp;·&nbsp; Séc. V a.C.
+</div>
+ 
+<script>
+  const sections = document.querySelectorAll('.section');
+  const navBtns = document.querySelectorAll('.nav-btn');
+ 
+  function showSection(index) {
+    sections.forEach((s, i) => {
+      s.classList.toggle('active', i === index);
+    });
+    navBtns.forEach((b, i) => {
+      b.classList.toggle('active', i === index);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
